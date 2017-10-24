@@ -1,0 +1,55 @@
+//简化版的源码:
+public class MyRunnable implements Runnable {
+
+	//2. 重写Runnable#run(), 把要执行的代码写到run()中.
+	@Override
+	public void run() {
+		for (int i = 0; i < 200; i++) {
+			System.out.println("run***********" + i);
+		}
+	}
+
+}
+
+public class Thread {
+	private Runnable target;   //new MyRunnable();
+	
+	public Thread(Runnable target) { //new MyRunnable();
+		 this.target = target;
+	}
+	
+	public void run() {
+		 if (target != null) {
+            target.run();  //多态原理, 调用的是非静态方法, 遵循"编译看左, 运行看右"
+        }
+	}
+}
+
+
+//完整版的源码
+public class Thread {
+	 private Runnable target;  //new MyRunnable();
+	 
+	 public Thread(Runnable target) {  // new MyRunnable();
+        init(null, target, "Thread-" + nextThreadNum(), 0);
+     }
+     
+      private void init(ThreadGroup g, Runnable target, String name,
+                      long stackSize) {
+        init(g, target, name, stackSize, null);
+     }
+     
+     private void init(ThreadGroup g, Runnable target, String name,
+                      long stackSize, AccessControlContext acc) {
+      
+        this.target = target;
+ 
+    }
+    
+     public void run() {
+        if (target != null) {
+            target.run();  //多态原理, 调用的是非静态方法, 遵循"编译看左, 运行看右"
+        }
+    }
+	
+}
